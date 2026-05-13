@@ -1,0 +1,60 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidUser(data) {
+       return data.uid is string 
+         && data.email is string 
+         && (data.displayName == null || data.displayName is string)
+         && (data.photoURL == null || data.photoURL is string);
+    }
+
+    function isValidProgress(data) {
+       return data.problemId is string 
+         && data.completedAt == request.time;
+    }
+
+    // --- Users Collection ---
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow create: if isOwner(userId) 
+        && isValidId(userId)
+        && request.resource.data.uid == userId
+        && request.resource.data.createdAt == request.time
+        && isValidUser(request.resource.data);
+      
+      allow update: if isOwner(userId)
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.diff(resource.data).affectedKeys().hasAny(['displayName', 'photoURL'])
+        && isValidUser(request.resource.data);
+
+      // --- Progress Subcollection ---
+      match /progress/{problemId} {
+        allow read: if isOwner(userId);
+        allow create, update: if isOwner(userId) 
+          && isValidId(problemId)
+          && isValidProgress(request.resource.data)
+          && request.resource.data.problemId == problemId;
+        allow delete: if isOwner(userId);
+      }
+    }
+  }
+}

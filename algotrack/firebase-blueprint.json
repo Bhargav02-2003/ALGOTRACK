@@ -1,0 +1,37 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User profile information",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email"]
+    },
+    "Progress": {
+      "title": "Problem Progress",
+      "description": "Record of a completed problem",
+      "type": "object",
+      "properties": {
+        "problemId": { "type": "string" },
+        "completedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["problemId", "completedAt"]
+    }
+  },
+  "firestore": {
+    "users": {
+      "schema": "User",
+      "description": "Collection of user profiles"
+    },
+    "users/{userId}/progress": {
+      "schema": "Progress",
+      "description": "Subcollection tracking completed problems for a user"
+    }
+  }
+}
