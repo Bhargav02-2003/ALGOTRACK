@@ -111,7 +111,7 @@ export async function getChaptersAPI(): Promise<ApiResponse<Chapter[]>> {
 
 // ── Progress API ──
 export async function getProgressAPI(userId: string): Promise<ApiResponse<ProgressEntry[]>> {
-  const res = await fetch(`${API_BASE}/progress/${userId}`, { headers: authHeaders() });
+  const res = await fetch(`${API_BASE}/progress`, { headers: authHeaders() });
   return res.json();
 }
 
@@ -142,7 +142,7 @@ export async function getProgressStatsAPI(userId: string): Promise<ApiResponse<{
     hard_total: number;
   }[];
 }>> {
-  const res = await fetch(`${API_BASE}/progress/${userId}/stats`, { headers: authHeaders() });
+  const res = await fetch(`${API_BASE}/progress/stats`, { headers: authHeaders() });
   return res.json();
 }
 
