@@ -227,20 +227,23 @@ export default function App() {
   const toggleProblem = async (problemId: string) => {
     if (!user) return;
 
+    const isCurrentlyCompleted = completedProblems.includes(problemId);
+    const willBeCompleted = !isCurrentlyCompleted;
+
     // Optimistic update
     setCompletedProblems((prev) =>
-      prev.includes(problemId) ? prev.filter((p) => p !== problemId) : [...prev, problemId]
+      willBeCompleted ? [...prev, problemId] : prev.filter((p) => p !== problemId)
     );
 
     try {
-      await toggleProgressAPI(problemId);
+      await toggleProgressAPI(problemId, willBeCompleted);
       // Refresh stats
       const statsRes = await getProgressStatsAPI(user.id);
       if (statsRes.success && statsRes.data) setStats(statsRes.data);
     } catch {
       // Revert on error
       setCompletedProblems((prev) =>
-        prev.includes(problemId) ? prev.filter((p) => p !== problemId) : [...prev, problemId]
+        isCurrentlyCompleted ? [...prev, problemId] : prev.filter((p) => p !== problemId)
       );
     }
   };

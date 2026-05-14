@@ -115,11 +115,11 @@ export async function getProgressAPI(userId: string): Promise<ApiResponse<Progre
   return res.json();
 }
 
-export async function toggleProgressAPI(problemId: string): Promise<ApiResponse<{ id?: string; completed: boolean }>> {
-  const res = await fetch(`${API_BASE}/progress`, {
+export async function toggleProgressAPI(problemId: string, completed: boolean): Promise<ApiResponse<{ id?: string; completed: boolean }>> {
+  const res = await fetch(`${API_BASE}/progress/toggle`, {
     method: 'POST',
     headers: authHeaders(),
-    body: JSON.stringify({ problem_id: problemId }),
+    body: JSON.stringify({ problemId, completed }), 
   });
   return res.json();
 }

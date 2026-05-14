@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import UserProgress from '../models/UserProgress.js';
 import Problem from '../models/Problem.js';
+import Chapter from '../models/Chapter.js';
 import { authenticate } from '../middleware/auth.js';
 
 const router = Router();
