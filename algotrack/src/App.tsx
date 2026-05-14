@@ -203,7 +203,7 @@ export default function App() {
         // Fetch progress
         const progressRes = await getProgressAPI(user.id);
         if (progressRes.success && progressRes.data) {
-          setCompletedProblems(progressRes.data.map((p) => p.problem_id));
+          setCompletedProblems(progressRes.data);
         }
 
         // Fetch stats

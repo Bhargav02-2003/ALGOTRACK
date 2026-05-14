@@ -110,7 +110,7 @@ export async function getChaptersAPI(): Promise<ApiResponse<Chapter[]>> {
 }
 
 // ── Progress API ──
-export async function getProgressAPI(userId: string): Promise<ApiResponse<ProgressEntry[]>> {
+export async function getProgressAPI(userId: string): Promise<ApiResponse<string[]>> {
   const res = await fetch(`${API_BASE}/progress`, { headers: authHeaders() });
   return res.json();
 }
