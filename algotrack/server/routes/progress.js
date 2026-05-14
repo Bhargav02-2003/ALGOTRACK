@@ -90,7 +90,10 @@ router.get('/stats', async (req, res) => {
       ? Math.round((totalCompleted / totalProblems) * 100) 
       : 0;
 
-    // Get all problems to calculate difficulty breakdown
+    // Get all chapters
+    const chapters = await Chapter.find({ status: 'active' }).lean();
+
+    // Get all problems
     const problems = await Problem.find({ status: 'active' }).lean();
     
     // Get all completed progress for the user
@@ -106,8 +109,44 @@ router.get('/stats', async (req, res) => {
     let mediumTotal = 0, mediumCompleted = 0;
     let hardTotal = 0, hardCompleted = 0;
 
+    // Prepare byChapter map
+    const chapterMap = {};
+    for (const ch of chapters) {
+      chapterMap[ch.id] = {
+        chapter_id: ch.id,
+        chapter_title: ch.title,
+        completed: 0,
+        total: 0,
+        easy_completed: 0,
+        easy_total: 0,
+        medium_completed: 0,
+        medium_total: 0,
+        hard_completed: 0,
+        hard_total: 0
+      };
+    }
+
     for (const p of problems) {
       const isCompleted = completedIds.has(p.id);
+      
+      // Update Chapter Stats
+      if (chapterMap[p.chapter_id]) {
+        chapterMap[p.chapter_id].total++;
+        if (isCompleted) chapterMap[p.chapter_id].completed++;
+        
+        if (p.difficulty === 'Easy') {
+          chapterMap[p.chapter_id].easy_total++;
+          if (isCompleted) chapterMap[p.chapter_id].easy_completed++;
+        } else if (p.difficulty === 'Medium') {
+          chapterMap[p.chapter_id].medium_total++;
+          if (isCompleted) chapterMap[p.chapter_id].medium_completed++;
+        } else if (p.difficulty === 'Hard') {
+          chapterMap[p.chapter_id].hard_total++;
+          if (isCompleted) chapterMap[p.chapter_id].hard_completed++;
+        }
+      }
+
+      // Update Overall Difficulty Stats
       if (p.difficulty === 'Easy') {
         easyTotal++;
         if (isCompleted) easyCompleted++;
@@ -120,17 +159,22 @@ router.get('/stats', async (req, res) => {
       }
     }
 
+    const byDifficulty = [
+      { difficulty: 'Easy', total: easyTotal, completed: easyCompleted },
+      { difficulty: 'Medium', total: mediumTotal, completed: mediumCompleted },
+      { difficulty: 'Hard', total: hardTotal, completed: hardCompleted }
+    ];
+
+    const byChapter = Object.values(chapterMap).filter(ch => ch.total > 0);
+
     return res.status(200).json({
       success: true,
       data: {
         totalProblems,
         totalCompleted,
         progressPercentage,
-        difficultyStats: {
-          easy: { total: easyTotal, completed: easyCompleted },
-          medium: { total: mediumTotal, completed: mediumCompleted },
-          hard: { total: hardTotal, completed: hardCompleted },
-        }
+        byDifficulty,
+        byChapter
       }
     });
   } catch (error) {
