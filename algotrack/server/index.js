@@ -19,8 +19,13 @@ const PORT = process.env.SERVER_PORT || 5000;
 // ── Core Middleware ──
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests from any localhost port (Vite may pick different ports)
-    if (!origin || /^http:\/\/localhost(:\d+)?$/.test(origin)) {
+    // Allow requests from localhost, or the deployed APP_URL
+    const allowedAppUrl = process.env.APP_URL;
+    if (
+      !origin || 
+      /^http:\/\/localhost(:\d+)?$/.test(origin) || 
+      (allowedAppUrl && origin === allowedAppUrl)
+    ) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
