@@ -665,37 +665,21 @@ export default function App() {
                             <span className="text-sm font-black text-[#1E70EB]">{totalPct}% Complete</span>
                           </div>
                           
-                          {/* Overall Chapter Progress */}
-                          <div className="space-y-2">
-                            <div className="flex justify-between text-[11px] font-black uppercase tracking-widest text-slate-400">
-                              <span>Overall Progress</span>
-                              <span>{ch.completed}/{ch.total}</span>
-                            </div>
-                            <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                              <motion.div
-                                initial={{ width: 0 }}
-                                whileInView={{ width: `${totalPct}%` }}
-                                transition={{ duration: 0.8 }}
-                                className="h-full bg-[#1E70EB]"
-                              />
-                            </div>
-                          </div>
-
-                          {/* Difficulty Breakdown for Chapter */}
-                          <div className="flex gap-4 pt-4 border-t border-slate-50">
+                          {/* Difficulty Breakdown for Chapter (Stacked vertically) */}
+                          <div className="space-y-4 pt-2">
                             {/* Easy */}
                             {ch.easy_total > 0 && (
-                              <div className="flex-1 space-y-1.5">
-                                <div className="flex justify-between text-[10px] font-bold text-slate-500 uppercase">
-                                  <span className="text-emerald-600">Easy</span>
+                              <div className="space-y-2">
+                                <div className="flex justify-between text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+                                  <span>Easy</span>
                                   <span>{ch.easy_completed}/{ch.easy_total}</span>
                                 </div>
-                                <div className="h-1.5 w-full bg-emerald-50 rounded-full overflow-hidden">
+                                <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                                   <motion.div
                                     initial={{ width: 0 }}
                                     whileInView={{ width: `${(ch.easy_completed / ch.easy_total) * 100}%` }}
                                     transition={{ duration: 0.8 }}
-                                    className="h-full bg-emerald-500"
+                                    className="h-full bg-[#00b8a3]"
                                   />
                                 </div>
                               </div>
@@ -703,17 +687,17 @@ export default function App() {
 
                             {/* Medium */}
                             {ch.medium_total > 0 && (
-                              <div className="flex-1 space-y-1.5">
-                                <div className="flex justify-between text-[10px] font-bold text-slate-500 uppercase">
-                                  <span className="text-amber-600">Medium</span>
+                              <div className="space-y-2">
+                                <div className="flex justify-between text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+                                  <span>Medium</span>
                                   <span>{ch.medium_completed}/{ch.medium_total}</span>
                                 </div>
-                                <div className="h-1.5 w-full bg-amber-50 rounded-full overflow-hidden">
+                                <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                                   <motion.div
                                     initial={{ width: 0 }}
                                     whileInView={{ width: `${(ch.medium_completed / ch.medium_total) * 100}%` }}
                                     transition={{ duration: 0.8 }}
-                                    className="h-full bg-amber-500"
+                                    className="h-full bg-[#ffb800]"
                                   />
                                 </div>
                               </div>
@@ -721,17 +705,17 @@ export default function App() {
 
                             {/* Hard */}
                             {ch.hard_total > 0 && (
-                              <div className="flex-1 space-y-1.5">
-                                <div className="flex justify-between text-[10px] font-bold text-slate-500 uppercase">
-                                  <span className="text-rose-600">Hard</span>
+                              <div className="space-y-2">
+                                <div className="flex justify-between text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+                                  <span>Hard</span>
                                   <span>{ch.hard_completed}/{ch.hard_total}</span>
                                 </div>
-                                <div className="h-1.5 w-full bg-rose-50 rounded-full overflow-hidden">
+                                <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                                   <motion.div
                                     initial={{ width: 0 }}
                                     whileInView={{ width: `${(ch.hard_completed / ch.hard_total) * 100}%` }}
                                     transition={{ duration: 0.8 }}
-                                    className="h-full bg-rose-500"
+                                    className="h-full bg-[#ef4444]"
                                   />
                                 </div>
                               </div>
