@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // The user provided this Mongo URI
-const MONGO_URI = 'mongodb+srv://panchalbhargav73_db_user:TNyYbmWFA2YRRNgO@cluster0.4wenkf3.mongodb.net/algotrack?retryWrites=true&w=majority&appName=Cluster0';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://panchalbhargav73_db_user:TNyYbmWFA2YRRNgO@cluster0.4wenkf3.mongodb.net/algotrack?retryWrites=true&w=majority&appName=Cluster0';
 
 export async function connectDB() {
   try {
